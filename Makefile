@@ -5,30 +5,28 @@ OUT := filterpath
 
 CC = gcc
 
-CFLAGS := -pedantic
+CFLAGS := -pedantic -std=gnu99
 
+CFLAGS += -s
 CFLAGS += -pipe
 
-CFLAGS += -O2 -march=native -mtune=native
+CFLAGS += -Wp,-U_FORTIFY_SOURCE
+
+CFLAGS += -O2 -march=native
 CFLAGS += -ffunction-sections -fdata-sections
 
-CFLAGS += -Wall
+CFLAGS += -Wall -Wextra
 CFLAGS += -Wcast-qual
 CFLAGS += -Wconversion
 CFLAGS += -Werror=return-type
 CFLAGS += -Werror=vla-larger-than=0
-CFLAGS += -Wextra
 CFLAGS += -Wmissing-prototypes
 CFLAGS += -Wshadow
 CFLAGS += -Wstrict-prototypes
 CFLAGS += -Wwrite-strings
 
-CFLAGS += -iquote src
-
 LDFLAGS := -fwhole-program -flto
 LDFLAGS += -Wl,--gc-sections
-
-LDLIBS += -lc
 
 VPATH += src
 SRC := filterpath.c
