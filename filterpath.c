@@ -10,6 +10,8 @@
 
 #include "filterpath.h"
 
+#define VERSION "1.0.1"
+
 static
 const char PATH_BASE_CHARSET[] = {
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -114,7 +116,7 @@ int main(int argc, char **argv)
         switch (c) {
             case GETOPT_VERSION_CHAR:
                 return write(STDOUT_FILENO,
-                    sstr_unpack("filterpath, version 1.0.0\n")),
+                    sstr_unpack("filterpath, version" VERSION "\n")),
                        EXIT_SUCCESS;
             case '?':
                 return EXIT_FAILURE;
