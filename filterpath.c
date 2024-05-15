@@ -60,6 +60,17 @@ bool is_valid_path(char const *path)
 }
 
 static
+bool find_path_rtrim(char *path, size_t len)
+{
+    while (path[--len] != '/') {
+        path[len] = '\0';
+        if (is_valid_path(path))
+            break;
+    }
+    return path;
+}
+
+static
 bool find_path(char *path, char *line)
 {
     size_t len = *line == '/';
@@ -78,10 +89,8 @@ bool find_path(char *path, char *line)
         memcpy(&path[len], &line[len], add);
         path[len + add] = '\0';
         printf("trying [%s]\n", path);
-        if (!is_valid_path(path)) {
-            path[len] = '\0';
-            return true;
-        }
+        if (!is_valid_path(path))
+            return find_path_rtrim(path, len + add);
         len += add;
     }
     return true;
