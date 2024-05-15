@@ -59,14 +59,45 @@ bool is_valid_path(char const *path)
     return access(abs, F_OK) == 0;
 }
 
+static
+bool find_path(char *path, char *line)
+{
+    size_t len = *line == '/';
+
+    if (strchr(line, '/') == NULL)
+        return false;
+    printf("-> %s\n", line);
+    for (; line[len] != '/'; len++);
+    memcpy(path, line, len);
+    path[len] = '\0';
+    printf("trying [%s]\n", path);
+    if (!is_valid_path(path))
+        return find_path(path, ++line);
+    for (size_t add;;) {
+        add = 1 + strcspn(&line[len + 1], "/");
+        memcpy(&path[len], &line[len], add);
+        path[len + add] = '\0';
+        printf("trying [%s]\n", path);
+        if (!is_valid_path(path)) {
+            path[len] = '\0';
+            return true;
+        }
+        len += add;
+    }
+    return true;
+}
+
 int main(void)
 {
     input_t buff;
     char path[PATH_MAX];
 
     while (shell_readline(&buff)) {
-        cut_simple_path(path, &buff);
-        if (is_valid_path(path))
+        if (cut_simple_path(path, &buff) != NULL && is_valid_path(path)) {
+            printf("%s\n", path);
+            continue;
+        }
+        if (find_path(path, buff.line))
             printf("%s\n", path);
     }
     return EXIT_SUCCESS;
