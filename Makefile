@@ -3,7 +3,7 @@
 BUILD_DIR := .build
 OUT := filterpath
 
-CC := gcc
+CC = gcc
 
 CFLAGS := -pedantic
 
@@ -93,3 +93,9 @@ ifneq ($(shell command -v printf),)
 else
   LOG_TIME = echo -e $(call BOXIFY, $(call TIME_MS) ,)
 endif
+
+PREFIX ?= /usr/bin
+
+.PHONY: install
+install: $(OUT)
+	install -D $(OUT) $(PREFIX)/filterpath --mode 0755

@@ -24,22 +24,15 @@
       };
 
       packages = rec {
-        hello = default;
-        default = pkgs.stdenvNoCC.mkDerivation rec {
-          name = "hello";
-
+        filterpath = default;
+        default = pkgs.stdenvNoCC.mkDerivation {
+          name = "filterpath";
           src = ./.;
-          nativeBuildInputs = [
-            pkgs.gcc13
-            pkgs.gnumake
-            # ↓ tput provider for colored makefile
-            pkgs.ncurses
-          ];
 
-          installPhase = ''
-            mkdir -p $out/bin
-            install -D ${name} $out/bin/${name} --mode 0755
-          '';
+          makeFlags = [
+            "CC=${pkgs.stdenv.cc}/bin/cc"
+            "PREFIX=${placeholder "out"}/bin"
+          ];
         };
       };
     });
