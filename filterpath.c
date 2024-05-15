@@ -49,16 +49,25 @@ char *cut_simple_path(char *path, input_t *buff)
     return path;
 }
 
+static
+bool is_valid_path(char const *path)
+{
+    static char abs[PATH_MAX];
+
+    if (realpath(path, abs) == NULL)
+        return false;
+    return access(abs, F_OK) == 0;
+}
+
 int main(void)
 {
     input_t buff;
     char path[PATH_MAX];
 
     while (shell_readline(&buff)) {
-        printf("(%s)\n", buff.line);
-        if (cut_simple_path(path, &buff) == NULL)
-            continue;
-        printf("%s\n", path);
+        cut_simple_path(path, &buff);
+        if (is_valid_path(path))
+            printf("%s\n", path);
     }
     return EXIT_SUCCESS;
 }
