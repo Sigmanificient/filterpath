@@ -1,5 +1,4 @@
 #include <getopt.h>
-#include <limits.h>
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -98,11 +97,9 @@ bool find_path(char *path, char *line)
     return true;
 }
 
-enum { GETOPT_VERSION_CHAR = (CHAR_MIN - 1) };
-
 static
 struct option LONG_OPTIONS[] = {
-    { "version", no_argument, NULL, GETOPT_VERSION_CHAR },
+    { "version", no_argument, NULL, 'v' },
     { 0 }
 };
 
@@ -112,11 +109,11 @@ int main(int argc, char **argv)
     char path[PATH_MAX];
     int c;
 
-    while ((c = getopt_long(argc, argv, "", LONG_OPTIONS, NULL)) > 0) {
+    while ((c = getopt_long(argc, argv, "v", LONG_OPTIONS, NULL)) > 0) {
         switch (c) {
-            case GETOPT_VERSION_CHAR:
+            case 'v':
                 return write(STDOUT_FILENO,
-                    sstr_unpack("filterpath, version" VERSION "\n")),
+                    sstr_unpack("filterpath, version " VERSION "\n")),
                        EXIT_SUCCESS;
             case '?':
                 return EXIT_FAILURE;
