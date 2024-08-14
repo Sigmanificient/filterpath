@@ -86,7 +86,7 @@ bool find_path(char *path, char *line)
     path[len] = '\0';
     if (!is_valid_path(path))
         return find_path(path, ++line);
-    for (size_t add;;) {
+    for (size_t add; line[len] != '\0';) {
         add = 1 + strcspn(&line[len + 1], "/");
         memcpy(&path[len], &line[len], add);
         path[len + add] = '\0';
@@ -105,7 +105,7 @@ struct option LONG_OPTIONS[] = {
 
 int main(int argc, char **argv)
 {
-    input_t buff;
+    input_t buff = { .len = 0, .line = NULL };
     char path[PATH_MAX];
     int c;
 
