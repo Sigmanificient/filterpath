@@ -37,6 +37,9 @@ bool is_valid_path(char const *path)
 {
     static char abs[PATH_MAX];
 
+    if (path[0] == '.' && path[1] == '\0')
+        return false;
+
     if (realpath(path, abs) == NULL)
         return false;
     return access(abs, F_OK) == 0;
