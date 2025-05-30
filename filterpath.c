@@ -75,13 +75,14 @@ bool find_path_rtrim(char *path, size_t len)
 }
 
 static
-bool find_path(char *path, char *line)
+bool find_path(char path[static PATH_MAX], char const *line)
 {
     size_t len = *line == '/';
 
     if (strchr(line, '/') == NULL)
         return false;
-    for (; line[len] != '/'; len++);
+    for (; line[len] != '\0' && line[len] != '/'; len++)
+        ;
     memcpy(path, line, len);
     path[len] = '\0';
     if (!is_valid_path(path))
@@ -106,7 +107,7 @@ struct option LONG_OPTIONS[] = {
 int main(int argc, char **argv)
 {
     input_t buff = { .len = 0, .line = NULL };
-    char path[PATH_MAX];
+    char path[PATH_MAX] = { 0 };
     int c;
 
     while ((c = getopt_long(argc, argv, "v", LONG_OPTIONS, NULL)) > 0) {
