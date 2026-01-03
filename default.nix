@@ -14,13 +14,6 @@ stdenv.mkDerivation (finalAttrs: {
   ];
 
   doCheck = true;
-  checkPhase = ''
-    runHook preCheck
-
-    echo "[`pwd`]" | ./filterpath | grep "`pwd`"
-
-    runHook postCheck
-  '';
 
   meta = {
     homepage = "https://github.com/Sigmanificient/filterpath";

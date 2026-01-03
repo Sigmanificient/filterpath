@@ -93,3 +93,7 @@ PREFIX ?= /usr/bin
 .PHONY: install
 install: $(OUT)
 	install -D $(OUT) $(PREFIX)/filterpath --mode 0755
+
+.PHONY: check
+check:
+	echo "[`pwd`]" | ./filterpath | grep "`pwd`"
