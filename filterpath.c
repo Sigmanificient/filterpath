@@ -5,11 +5,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <linux/limits.h>
+#ifdef __linux__
+#include <linux/limits.h>  // PATH_MAX = 4096
+#elif defined(__APPLE__)
+#include <sys/syslimits.h> // PATH_MAX = 1024
+#else
+#include <limits.h>
+#endif
 
 #include "filterpath.h"
 
-#define VERSION "1.0.2"
+#define VERSION "1.0.3"
 
 static
 const char PATH_BASE_CHARSET[] = {

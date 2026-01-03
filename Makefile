@@ -18,7 +18,6 @@ CFLAGS += -Wall -Wextra
 CFLAGS += -Wcast-qual
 CFLAGS += -Wconversion
 CFLAGS += -Werror=return-type
-CFLAGS += -Werror=vla-larger-than=0
 CFLAGS += -Wmissing-prototypes
 CFLAGS += -Wshadow
 CFLAGS += -Wstrict-prototypes
