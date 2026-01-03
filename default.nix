@@ -28,6 +28,6 @@ stdenv.mkDerivation (finalAttrs: {
     license = lib.licenses.gpl3Only;
     maintainers = with lib.maintainers; [sigmanificient];
     mainProgram = "filterpath";
-    platforms = lib.platforms.linux;
+    platforms = lib.platforms.unix;
   };
 })
