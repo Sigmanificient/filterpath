@@ -12,21 +12,16 @@ CFLAGS += -pipe
 
 CFLAGS += -Wp,-U_FORTIFY_SOURCE
 
-CFLAGS += -O2 -march=native
-CFLAGS += -ffunction-sections -fdata-sections
+CFLAGS += -O2
 
 CFLAGS += -Wall -Wextra
 CFLAGS += -Wcast-qual
 CFLAGS += -Wconversion
 CFLAGS += -Werror=return-type
-CFLAGS += -Werror=vla-larger-than=0
 CFLAGS += -Wmissing-prototypes
 CFLAGS += -Wshadow
 CFLAGS += -Wstrict-prototypes
 CFLAGS += -Wwrite-strings
-
-LDFLAGS := -fwhole-program -flto
-LDFLAGS += -Wl,--gc-sections
 
 VPATH += src
 SRC := filterpath.c
@@ -97,3 +92,7 @@ PREFIX ?= /usr/bin
 .PHONY: install
 install: $(OUT)
 	install -D $(OUT) $(PREFIX)/filterpath --mode 0755
+
+.PHONY: check
+check:
+	echo "[`pwd`]" | ./filterpath | grep "`pwd`"

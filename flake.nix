@@ -1,39 +1,48 @@
 {
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
-  };
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
   outputs = {
     self,
     nixpkgs,
-    flake-utils,
-  }:
-    flake-utils.lib.eachSystem ["x86_64-linux"]
-    (system: let
-      pkgs = nixpkgs.legacyPackages.${system};
-    in rec {
-      formatter = pkgs.alejandra;
+  }: let
+    applySystems = nixpkgs.lib.genAttrs [
+      "x86_64-linux"
+      "aarch64-linux"
+      "aarch64-darwin"
+      "x86_64-darwin"
+    ];
+    eachSystem = f:
+      applySystems (system:
+        f {
+          inherit system;
+          pkgs = nixpkgs.legacyPackages.${system};
+        });
+  in {
+    formatter = eachSystem ({pkgs, ...}: pkgs.alejandra);
 
-      devShells.default = pkgs.mkShell {
-        inputsFrom = pkgs.lib.attrsets.attrValues packages;
+    devShells.default = eachSystem ({
+      pkgs,
+      system,
+    }: {
+      default = pkgs.mkShell {
+        inputsFrom = [self.packages.${system}.filterpath];
+
+        env.CC = pkgs.stdenv.cc;
+
         packages = with pkgs; [
           python3Packages.compiledb
           gcovr
         ];
       };
-
-      packages = rec {
-        filterpath = default;
-        default = pkgs.stdenvNoCC.mkDerivation {
-          name = "filterpath";
-          src = ./.;
-
-          makeFlags = [
-            "CC=${pkgs.stdenv.cc}/bin/cc"
-            "PREFIX=${placeholder "out"}/bin"
-          ];
-        };
-      };
     });
+
+    packages = eachSystem ({
+      pkgs,
+      system,
+    }: {
+      filterpath = pkgs.callPackage ./. {};
+
+      default = self.packages.${system}.filterpath;
+    });
+  };
 }
