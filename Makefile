@@ -12,8 +12,7 @@ CFLAGS += -pipe
 
 CFLAGS += -Wp,-U_FORTIFY_SOURCE
 
-CFLAGS += -O2 -march=native
-CFLAGS += -ffunction-sections -fdata-sections
+CFLAGS += -O2
 
 CFLAGS += -Wall -Wextra
 CFLAGS += -Wcast-qual
@@ -24,9 +23,6 @@ CFLAGS += -Wmissing-prototypes
 CFLAGS += -Wshadow
 CFLAGS += -Wstrict-prototypes
 CFLAGS += -Wwrite-strings
-
-LDFLAGS := -fwhole-program -flto
-LDFLAGS += -Wl,--gc-sections
 
 VPATH += src
 SRC := filterpath.c
